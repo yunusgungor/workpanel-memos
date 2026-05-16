@@ -47,6 +47,13 @@
         }
       }
     ],
+    "domains": [
+      {
+        "host": "memos.googig.cloud",
+        "service": "memos",
+        "tls": true
+      }
+    ],
     "release": {
       "strategy": "rolling",
       "replicas": 1
