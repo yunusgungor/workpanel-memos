@@ -1,0 +1,55 @@
+{
+  "apiVersion": "workpanel/v2",
+  "kind": "Application",
+  "metadata": {
+    "name": "workpanel-memos",
+    "description": "Self-hosted note-taking tool",
+    "labels": {
+      "app": "workpanel-memos",
+      "tier": "backend"
+    }
+  },
+  "spec": {
+    "primaryService": "memos",
+    "services": [
+      {
+        "name": "memos",
+        "type": "web",
+        "build": {
+          "context": ".",
+          "dockerfile": "Dockerfile.workpanel"
+        },
+        "expose": true,
+        "ports": [
+          {
+            "target": 5230,
+            "protocol": "tcp"
+          }
+        ],
+        "env": {
+          "MEMOS_PORT": "5230",
+          "MEMOS_DRIVER": "sqlite",
+          "TZ": "UTC"
+        },
+        "volumes": [
+          "memos-data"
+        ]
+      }
+    ],
+    "volumes": [
+      {
+        "name": "memos-data",
+        "mountPath": "/var/opt/memos",
+        "reclaimPolicy": "retain",
+        "backup": {
+          "enabled": true,
+          "retentionCount": 7
+        }
+      }
+    ],
+    "release": {
+      "strategy": "rolling",
+      "replicas": 1
+    }
+  }
+}
